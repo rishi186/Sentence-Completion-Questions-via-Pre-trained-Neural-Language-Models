@@ -1,0 +1,90 @@
+!pip install transformers
+!pip install torch
+
+import torch
+from transformers import BartTokenizer, BartForSequenceClassification
+from torch.nn import functional as F
+
+model_name = "facebook/bart-large"  # You can experiment with other BART variants
+tokenizer = BartTokenizer.from_pretrained(model_name)
+model = BartForSequenceClassification.from_pretrained(model_name)
+
+def prepare_data(question, options):
+    """
+    Prepares the input data for the model.
+
+    Args:
+        question (str): The sentence with blanks.
+        options (list): A list of possible options to fill in the blank.
+
+    Returns:
+        list: A list of processed sentences, where each sentence is the question
+              with one of the options filled in.
+    """
+    processed_sentences = []
+    for option in options:
+        # Simple blank filling (replace a generic blank token)
+        # You might need more sophisticated logic based on your data
+        processed_sentence = question.replace("_____", option)
+        processed_sentences.append(processed_sentence)
+    return processed_sentences
+
+# Example Usage
+question = "The cat sat on the _____. Options: [mat, table, chair]"
+options = ["mat", "table", "chair"]
+sentences = prepare_data(question, options)
+print(sentences)
+
+def predict_sentence_correctness(sentences):
+    """
+    Predicts the correctness probability for each sentence using the BART model.
+
+    Args:
+        sentences (list): A list of sentences.
+
+    Returns:
+        list: A list of probabilities, where each probability corresponds to
+              the likelihood of the sentence being correct.
+    """
+    tokenizer.truncation_side = "left" # Truncate from left to handle long sequences
+
+    inputs = tokenizer(sentences, return_tensors="pt", padding=True, truncation=True, max_length=512)  # Adjust max_length as needed
+    with torch.no_grad():
+        outputs = model(**inputs)
+        probabilities = F.softmax(outputs.logits, dim=1)[:, 1].tolist()  # Probability of being correct
+    return probabilities
+
+probabilities = predict_sentence_correctness(sentences)
+print(probabilities)
+
+def get_best_option(options, probabilities):
+    """
+    Determines the best option based on the predicted probabilities.
+
+    Args:
+        options (list): A list of options.
+        probabilities (list): A list of probabilities corresponding to the options.
+
+    Returns:
+        str: The option with the highest probability.
+    """
+    best_option_index = probabilities.index(max(probabilities))
+    return options[best_option_index]
+
+best_option = get_best_option(options, probabilities)
+print("Best Option:", best_option)
+
+
+
+
+
+question = " apple is a ____."
+options = ["fruit", "vegetable", "fish"]
+
+sentences = prepare_data(question, options)
+probabilities = predict_sentence_correctness(sentences)
+best_option = get_best_option(options, probabilities)
+
+print("Question:", question)
+print("Options:", options)
+print("Best Option:", best_option)
