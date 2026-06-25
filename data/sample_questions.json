@@ -1,0 +1,102 @@
+[
+  {
+    "question": "The cat sat on the _____.",
+    "options": ["mat", "table", "chair", "roof"],
+    "answer": "mat"
+  },
+  {
+    "question": "An apple is a _____.",
+    "options": ["fruit", "vegetable", "fish", "car"],
+    "answer": "fruit"
+  },
+  {
+    "question": "The teacher asked the students to _____ their homework.",
+    "options": ["submit", "eat", "drive", "paint"],
+    "answer": "submit"
+  },
+  {
+    "question": "Water _____ at 100 degrees Celsius.",
+    "options": ["boils", "freezes", "flies", "sings"],
+    "answer": "boils"
+  },
+  {
+    "question": "She was very _____ about passing the exam.",
+    "options": ["happy", "wooden", "triangular", "metallic"],
+    "answer": "happy"
+  },
+  {
+    "question": "The sun _____ in the east.",
+    "options": ["rises", "sets", "falls", "sinks"],
+    "answer": "rises"
+  },
+  {
+    "question": "He _____ a book every night before bed.",
+    "options": ["reads", "throws", "eats", "builds"],
+    "answer": "reads"
+  },
+  {
+    "question": "The restaurant is famous for its delicious _____.",
+    "options": ["food", "cars", "furniture", "weather"],
+    "answer": "food"
+  },
+  {
+    "question": "Plants need _____ to grow.",
+    "options": ["water", "plastic", "metal", "electricity"],
+    "answer": "water"
+  },
+  {
+    "question": "The baby _____ when she was hungry.",
+    "options": ["cried", "drove", "typed", "swam"],
+    "answer": "cried"
+  },
+  {
+    "question": "A doctor works in a _____.",
+    "options": ["hospital", "kitchen", "garage", "garden"],
+    "answer": "hospital"
+  },
+  {
+    "question": "The _____ is the largest planet in our solar system.",
+    "options": ["Jupiter", "Earth", "Mars", "Mercury"],
+    "answer": "Jupiter"
+  },
+  {
+    "question": "She bought a new _____ for her laptop.",
+    "options": ["bag", "tree", "river", "cloud"],
+    "answer": "bag"
+  },
+  {
+    "question": "The movie was so _____ that everyone cried.",
+    "options": ["sad", "tall", "green", "fast"],
+    "answer": "sad"
+  },
+  {
+    "question": "You should _____ your teeth twice a day.",
+    "options": ["brush", "wash", "count", "plant"],
+    "answer": "brush"
+  },
+  {
+    "question": "The library has thousands of _____ on various topics.",
+    "options": ["books", "cars", "dogs", "chairs"],
+    "answer": "books"
+  },
+  {
+    "question": "He felt _____ after running the marathon.",
+    "options": ["tired", "hungry", "angry", "bored"],
+    "answer": "tired"
+  },
+  {
+    "question": "The bird _____ high in the sky.",
+    "options": ["flew", "swam", "drove", "walked"],
+    "answer": "flew"
+  },
+  {
+    "question": "She speaks three _____ fluently.",
+    "options": ["languages", "songs", "recipes", "colors"],
+    "answer": "languages"
+  },
+  {
+    "question": "The ice _____ in the warm sun.",
+    "options": ["melted", "froze", "grew", "hardened"],
+    "answer": "melted"
+  }
+]

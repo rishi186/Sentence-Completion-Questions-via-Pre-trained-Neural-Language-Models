@@ -1,109 +1,166 @@
-#   ESL Sentence Completion using BART
+# ESL Sentence Completion via Pre-trained Neural Language Models
 
-This project implements a solution for automatically solving English as a Second Language (ESL) sentence completion questions, based on the research paper "Solving ESL Sentence Completion Questions via Pre-trained Neural Language Models"[cite: 1, 2, 3, 4].
+This project implements a solution for automatically solving English as a Second Language (ESL) sentence completion questions using pre-trained neural language models, based on the research paper:
 
-##   Overview
+> Liu, Q., Liu, T., Zhao, J., Fang, Q., Ding, W., Wu, Z., Xia, F., Tang, J., & Liu, Z. "Solving ESL Sentence Completion Questions via Pre-trained Neural Language Models." arXiv:2107.07122 (2021).
 
-Sentence completion (SC) questions present a sentence with one or more blanks that need to be filled in, with several possible options provided[cite: 2, 3]. This project utilizes a pre-trained language model, BART (Bidirectional and Auto-Regressive Transformers), to predict the most appropriate option to complete the sentence[cite: 4, 24].
+## Overview
 
-##   Features
+Sentence completion (SC) questions present a sentence with one or more blanks that need to be filled in, with several possible options provided. This project uses pre-trained language models to predict the most appropriate option to complete the sentence.
 
-* **Pre-trained BART Model:** Leverages the power of BART for language understanding and generation.
-* **Sentence Preparation:** Processes input questions and options to create suitable input for the model.
-* **Correctness Prediction:** Predicts the likelihood of each generated sentence being a correct completion.
-* **Best Option Selection:** Selects the option that results in the highest predicted correctness probability.
+## Features
 
-##   Setup
+- **Multiple Model Architectures**: Supports BART (Seq2Seq), BERT/RoBERTa (MLM), and GPT-2 (CLM) scoring approaches
+- **Batch Evaluation**: Evaluate models on datasets with accuracy and bias analysis
+- **Fine-tuning Support**: Fine-tune models on custom ESL datasets
+- **Web Interface**: Interactive Streamlit app for testing and evaluation
+- **CLI Interface**: Full command-line interface for all operations
+- **Dataset Support**: Load from JSON or CSV, with sample dataset included
 
-###   Prerequisites
+## Project Structure
 
-* Python 3.x
-* pip
+```
+Sentence-Completion-Questions-via-Pre-trained-Neural-Language/
+├── main.py                          # CLI entry point
+├── app.py                           # Streamlit web app
+├── config.py                        # Configuration settings
+├── requirements.txt                 # Python dependencies
+├── data/
+│   └── sample_questions.json        # 20 sample ESL questions
+├── src/
+│   ├── models/
+│   │   ├── sentence_completion.py   # Core model scorers (BART, MLM, CLM)
+│   │   └── fine_tune.py             # Fine-tuning module
+│   ├── data/
+│   │   ├── prepare.py               # Data preparation utilities
+│   │   └── dataset.py               # Dataset loading and management
+│   ├── evaluation/
+│   │   └── metrics.py               # Evaluation metrics and bias analysis
+│   └── utils/
+│       └── helpers.py               # Utility functions
+└── tests/
+    └── test_core.py                 # Unit tests
+```
 
-###   Installation
+## Setup
 
-1.  Clone the repository:
+### Prerequisites
 
-    ```bash
-    git clone <repository_url>
-    cd <repository_name>
-    ```
+- Python 3.8+
+- pip
 
-2.  Install the required packages:
+### Installation
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/rishi186/Sentence-Completion-Questions-via-Pre-trained-Neural-Language-Models.git
+   cd Sentence-Completion-Questions-via-Pre-trained-Neural-Language-Models
+   ```
 
-    (You'll need to create a `requirements.txt` file with the following content):
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-    ```
-    transformers
-    torch
-    ```
+## Usage
 
-##   Usage
+### CLI Interface
 
-1.  **Prepare your data:**
+**Predict a single question:**
+```bash
+python main.py predict --question "The cat sat on the _____." --options mat table chair --model bart
+```
 
-    * Ensure your data is in a format that can be processed by the `prepare_data` function.
-    * The code currently uses a simple string replacement for blanks. You might need to adapt this function based on your data format.
+**Evaluate on a dataset:**
+```bash
+python main.py evaluate --data data/sample_questions.json --model bert --output results/
+```
 
-2.  **Run the code:**
+**Fine-tune a model:**
+```bash
+python main.py finetune --train-data data/train.json --eval-data data/eval.json --model-name facebook/bart-base --epochs 3
+```
 
-    ```python
-    python main.py
-    ```
+**Interactive mode:**
+```bash
+python main.py interactive --model roberta
+```
 
-    (You might need to create a `main.py` file to execute the code.)
+### Web Interface
 
-3.  **Modify the `question` and `options` variables** in the script to test with your own examples.
+Launch the Streamlit app:
+```bash
+streamlit run app.py
+```
 
-##   Code Explanation
+Then open your browser to the displayed URL. The web app provides:
+- **Single Question**: Test individual questions with score visualization
+- **Batch Evaluation**: Upload a dataset and run full evaluation with metrics
+- **About**: Project information and model comparison
 
-* `prepare_data(question, options)`:
+### Supported Models
 
-    * Prepares the input data by generating complete sentences from the question and each option.
-    * It takes the sentence completion `question` (string) and a list of possible `options` (list of strings) as input.
-    * It returns a list of processed sentences.
-* `predict_sentence_correctness(sentences)`:
+| Model Type | Default Model | Scoring Method |
+|------------|--------------|---------------|
+| `bart` | `facebook/bart-large` | Seq2Seq encoder-decoder log-likelihood |
+| `bert` | `bert-base-uncased` | Masked language modeling (MLM) |
+| `roberta` | `roberta-base` | Masked language modeling (MLM) |
+| `gpt2` | `gpt2` | Causal language modeling (CLM) |
 
-    * Predicts the correctness probability for each sentence using the BART model.
-    * It takes a list of `sentences` (list of strings) as input.
-    * It uses the `BartTokenizer` to convert sentences to numerical tokens.
-    * It feeds the tokenized input to the `BartForSequenceClassification` model.
-    * It returns a list of probabilities, where each probability corresponds to the likelihood of the sentence being correct.
-* `get_best_option(options, probabilities)`:
+### Dataset Format
 
-    * Determines the best option based on the predicted probabilities.
-    * It takes the list of `options` (list of strings) and their corresponding `probabilities` (list of floats) as input.
-    * It returns the option with the highest probability.
+JSON format:
+```json
+[
+  {
+    "question": "The cat sat on the _____.",
+    "options": ["mat", "table", "chair", "roof"],
+    "answer": "mat"
+  }
+]
+```
 
-##   Important Considerations
+CSV format (columns: `question`, `options`, `answer`):
+```csv
+question,options,answer
+The cat sat on the _____.,mat;table;chair,mat
+```
 
-* **Data Preprocessing:** The `prepare_data` function might need adjustments based on your specific dataset.
-* **Model Selection:** You can experiment with different pre-trained language models.
-* **Fine-tuning:** For optimal performance, fine-tuning the model on a relevant dataset is crucial.
-* **Bias Mitigation:** The model might exhibit bias (e.g., favoring the first option). Techniques to mitigate bias should be considered.
-* **Evaluation:** Implement appropriate evaluation metrics to assess the model's performance.
+## Scoring Approaches
 
-##   Disclaimer
+### BART (Seq2Seq)
+The encoder receives the sentence with the blank, and the decoder scores each option by computing the log-likelihood of the option tokens. Scores are normalized by token count to avoid length bias.
 
-This project provides a basic implementation based on the research paper. It may require further development, fine-tuning, and bias mitigation techniques to achieve optimal results.
+### BERT/RoBERTa (MLM)
+The blank is replaced with the mask token. For single-token options, the probability is read directly from the mask position. For multi-token options, a pseudo-log-likelihood approach is used: each option token is masked in the full sentence and its probability is computed.
 
-##   License
+### GPT-2 (CLM)
+The log-likelihood of the option tokens is computed given the preceding context. This leverages the autoregressive nature of causal language models.
 
-\[Add your preferred license here, e.g., MIT License]
+## Evaluation
 
-##   References
+The evaluation module provides:
+- **Overall accuracy**: Percentage of correctly answered questions
+- **Per-position accuracy**: Accuracy broken down by the position of the correct answer (to detect positional bias)
+- **Confusion matrix**: Which options get confused with each other
+- **Bias analysis**: Statistical analysis of positional bias
 
-1.  Liu, Qiongqiong, Tianqiao Liu, Jiafu Zhao, Qiang Fang, Wenbiao Ding, Zhongqin Wu, Feng Xia, Jiliang Tang, and Zitao Liu. "Solving ESL Sentence Completion Questions via Pre-trained Neural Language Models." arXiv preprint arXiv:2107.07122 (2021).
+## Testing
 
-**Changes Made and Why:**
+Run the unit tests:
+```bash
+python -m pytest tests/ -v
+```
 
-* **Removed Excessive Citations:** The previous version had a very long citation at the end, which is not standard practice for a README. I've kept a single, complete citation.
-* **Cleaned Up Formatting:** I've adjusted spacing and indentation to make the README more readable.
-* **Consistency:** Ensured consistency in formatting (e.g., using backticks for code snippets).
-* **Focus on Key Information:** The README now focuses on the essential information a user needs to understand and use the project.
+Or with unittest:
+```bash
+python -m unittest tests.test_core -v
+```
 
-This revised README is much cleaner, more professional, and easier to understand.
+## License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+## References
+
+1. Liu, Q. et al. "Solving ESL Sentence Completion Questions via Pre-trained Neural Language Models." arXiv:2107.07122 (2021).
