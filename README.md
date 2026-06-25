@@ -1,12 +1,12 @@
 <div align="center">
 
-# 📝 ESL Sentence Completion
+# ESL Sentence Completion
 
 ### via Pre-trained Neural Language Models
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue?logo=python&logoColor=white)](https://python.org)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0+-ee4c2c?logo=pytorch&logoColor=white)](https://pytorch.org)
-[![Transformers](https://img.shields.io/badge/🤗%20Transformers-4.30+-ffd21e)](https://huggingface.co/transformers)
+[![Transformers](https://img.shields.io/badge/%F0%9F%A4%97%20Transformers-4.30+-ffd21e)](https://huggingface.co/transformers)
 [![Tests](https://img.shields.io/badge/Tests-48%20passing-success)](https://github.com/rishi186/Sentence-Completion-Questions-via-Pre-trained-Neural-Language-Models)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 
@@ -17,34 +17,34 @@
 
 ---
 
-[🚀 Quick Start](#-quick-start) · [📊 Models](#-supported-models) · [🖥️ Web App](#️-web-interface) · [⌨️ CLI](#-cli-interface) · [📄 PDF Support](#-pdf-support) · [🧪 Testing](#-testing) · [🐳 Docker](#-docker-deployment)
+[Quick Start](#-quick-start) · [Models](#-supported-models) · [Web App](#-web-interface) · [CLI](#-cli-interface) · [PDF Support](#-pdf-support) · [Testing](#-testing) · [Docker](#-docker-deployment)
 
 </div>
 
 ---
 
-## 📖 Overview
+## Overview
 
 Sentence completion (SC) questions present a sentence with one or more blanks and several candidate options. This project uses **pre-trained neural language models** to predict the most appropriate option — aligned with the research paper:
 
 > Liu, Q., Liu, T., Zhao, J., Fang, Q., Ding, W., Wu, Z., Xia, F., Tang, J., & Liu, Z. *"Solving ESL Sentence Completion Questions via Pre-trained Neural Language Models."* arXiv:2107.07122 (2021).
 
-## ✨ Features
+## Features
 
 | Feature | Description |
 |---------|-------------|
-| 🧠 **Multi-Model Scoring** | BART (Seq2Seq), BERT/RoBERTa (MLM), GPT-2 (CLM) |
-| 📄 **PDF Upload & Parsing** | Upload question PDFs → auto-parse → answer → export |
-| 📊 **Batch Evaluation** | Accuracy, per-position accuracy, bias analysis |
-| 🎯 **Fine-Tuning** | Fine-tune models on custom ESL datasets |
-| 🖥️ **Web Interface** | Interactive Streamlit app with visualizations |
-| ⌨️ **CLI** | Full command-line interface for all operations |
-| 🔒 **Input Validation** | Comprehensive validation with clear error messages |
-| 🔄 **Retry Logic** | Automatic retries for transient failures |
-| 📦 **Production Ready** | Docker, logging, testing, packaging |
-| 📤 **Result Export** | PDF, JSON, CSV download options |
+| **Multi-Model Scoring** | BART (Seq2Seq), BERT/RoBERTa (MLM), GPT-2 (CLM) |
+| **PDF Upload & Parsing** | Upload question PDFs → auto-parse → answer → export |
+| **Batch Evaluation** | Accuracy, per-position accuracy, bias analysis |
+| **Fine-Tuning** | Fine-tune models on custom ESL datasets |
+| **Web Interface** | Interactive Streamlit app with visualizations |
+| **CLI** | Full command-line interface for all operations |
+| **Input Validation** | Comprehensive validation with clear error messages |
+| **Retry Logic** | Automatic retries for transient failures |
+| **Production Ready** | Docker, logging, testing, packaging |
+| **Result Export** | PDF, JSON, CSV download options |
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # 1. Clone
@@ -58,54 +58,20 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-Or use the CLI:
+The app will open at `http://localhost:8501`.
 
-```bash
-# Predict a single question
-python main.py predict --question "The cat sat on the _____." --options mat table chair --model bart
+## Supported Models
 
-# Answer questions from a PDF
-python main.py pdf --input questions.pdf --model bart --output results/
-```
-
-## 📊 Supported Models
-
-| Model | Architecture | Default | Scoring Method |
-|-------|-------------|---------|---------------|
+| Model Type | Architecture | Default Model | Scoring Method |
+|------------|-------------|---------------|----------------|
 | **BART** | Seq2Seq | `facebook/bart-large` | Encoder-decoder log-likelihood |
 | **BERT** | MLM | `bert-base-uncased` | Masked language modeling |
 | **RoBERTa** | MLM | `roberta-base` | Masked language modeling |
 | **GPT-2** | CLM | `gpt2` | Causal language modeling |
 
-### Scoring Approaches
+## Web Interface
 
-<details>
-<summary><b>🔵 BART (Seq2Seq)</b></summary>
-
-The encoder receives the sentence with the blank replaced by a mask token. The decoder scores each option by computing the **log-likelihood** of the option tokens given the encoder output. Scores are **normalized by token count** to avoid length bias.
-</details>
-
-<details>
-<summary><b>🟡 BERT / RoBERTa (MLM)</b></summary>
-
-The blank is replaced with the `[MASK]` token. For **single-token options**, the probability is read directly from the mask position. For **multi-token options**, a pseudo-log-likelihood approach is used: each option token is masked in the full sentence and its conditional probability is computed given the rest of the sentence.
-</details>
-
-<details>
-<summary><b>🟢 GPT-2 (CLM)</b></summary>
-
-The **log-likelihood** of the option tokens is computed given the preceding context. This leverages the autoregressive nature of causal language models — the model predicts how likely each option follows the context before the blank.
-</details>
-
-## 🖥️ Web Interface
-
-Launch the Streamlit app:
-
-```bash
-streamlit run app.py
-```
-
-The app provides **four tabs**:
+Launch the Streamlit app with `streamlit run app.py`. The app provides four tabs:
 
 | Tab | Description |
 |-----|-------------|
@@ -114,7 +80,7 @@ The app provides **four tabs**:
 | **Batch Evaluation** | Upload a JSON dataset → run full evaluation with metrics & bias analysis |
 | **About** | Project info, model comparison table, and reference paper |
 
-## ⌨️ CLI Interface
+## CLI Interface
 
 ```bash
 # Predict a single question
@@ -146,7 +112,7 @@ python main.py finetune \
 python main.py interactive --model roberta
 ```
 
-## 📄 PDF Support
+## PDF Support
 
 Upload PDFs with sentence completion questions. The parser supports **multiple formats**:
 
@@ -209,11 +175,11 @@ Answer Key:
 ### Export Options
 
 After answering, download results as:
-- **📄 PDF** — Formatted document with questions, options, scores, and correctness
-- **📋 JSON** — Structured data for programmatic use
-- **📊 CSV** — Spreadsheet-friendly format
+- **PDF** — Formatted document with questions, options, scores, and correctness
+- **JSON** — Structured data for programmatic use
+- **CSV** — Spreadsheet-friendly format
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Sentence-Completion-Questions-via-Pre-trained-Neural-Language/
@@ -249,7 +215,7 @@ Sentence-Completion-Questions-via-Pre-trained-Neural-Language/
 └── generate_sample_pdf.py     # Sample PDF generator
 ```
 
-## 📋 Dataset Format
+## Dataset Format
 
 **JSON:**
 ```json
@@ -268,7 +234,7 @@ question,options,answer
 The cat sat on the _____.,mat;table;chair;roof,mat
 ```
 
-## 🧪 Testing
+## Testing
 
 ```bash
 # Run all 48 tests
@@ -287,7 +253,7 @@ Test coverage includes:
 - Scorer factory & error handling
 - Logger infrastructure
 
-## 🐳 Docker Deployment
+## Docker Deployment
 
 ```bash
 # Build and run with Docker Compose
@@ -300,7 +266,7 @@ docker run -p 8501:8501 esl-completion
 
 The app will be available at `http://localhost:8501`.
 
-## 🛠️ Development
+## Development
 
 ```bash
 # Install with dev dependencies
@@ -318,7 +284,7 @@ make pdf          # Generate sample PDF
 make clean        # Clean build artifacts
 ```
 
-## 📈 Evaluation Metrics
+## Evaluation Metrics
 
 | Metric | Description |
 |--------|-------------|
@@ -327,11 +293,11 @@ make clean        # Clean build artifacts
 | **Bias Analysis** | Statistical detection of positional bias |
 | **Detailed Results** | Per-question scores and predictions |
 
-## 📄 License
+## License
 
 MIT License — see [LICENSE](LICENSE) for details.
 
-## 📚 References
+## References
 
 1. Liu, Q. et al. *"Solving ESL Sentence Completion Questions via Pre-trained Neural Language Models."* arXiv:2107.07122 (2021).
 2. Devlin, J. et al. *"BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding."* (2019).
@@ -342,6 +308,6 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 <div align="center">
 
-**⭐ If this project helped you, consider giving it a star!**
+**If this project helped you, consider giving it a star!**
 
 </div>

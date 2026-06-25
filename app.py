@@ -15,8 +15,11 @@ import streamlit as st
 import pandas as pd
 import json
 import os
+import sys
 import io
 import time
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from src.models.sentence_completion import (
     create_scorer, DEFAULT_MODELS, ScorerError,
